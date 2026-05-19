@@ -1,5 +1,5 @@
 const https = require('https');
-
+ 
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
     return {
@@ -12,14 +12,17 @@ exports.handler = async (event) => {
       body: ''
     };
   }
-
+ 
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
-
+ 
   const body = event.body;
   const apiKey = process.env.ANTHROPIC_API_KEY;
-
+ 
+  console.log('API Key present:', !!apiKey);
+  console.log('API Key prefix:', apiKey ? apiKey.substring(0, 12) : 'MISSING');
+ 
   return new Promise((resolve) => {
     const options = {
       hostname: 'api.anthropic.com',
@@ -32,11 +35,13 @@ exports.handler = async (event) => {
         'Content-Length': Buffer.byteLength(body)
       }
     };
-
+ 
     const req = https.request(options, (res) => {
       let data = '';
       res.on('data', (chunk) => { data += chunk; });
       res.on('end', () => {
+        console.log('Anthropic status:', res.statusCode);
+        console.log('Anthropic response:', data.substring(0, 300));
         resolve({
           statusCode: 200,
           headers: {
@@ -47,15 +52,16 @@ exports.handler = async (event) => {
         });
       });
     });
-
+ 
     req.on('error', (err) => {
+      console.log('Request error:', err.message);
       resolve({
         statusCode: 500,
         headers: { 'Access-Control-Allow-Origin': '*' },
         body: JSON.stringify({ error: err.message })
       });
     });
-
+ 
     req.write(body);
     req.end();
   });
