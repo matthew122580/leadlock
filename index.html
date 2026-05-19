@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lead Lock — See Your AI Agent Live in 30 Seconds</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0d0b09;
+  --surface: #151210;
+  --surface2: #1c1916;
+  --border: #2a2520;
+  --accent: #c8440a;
+  --accent-light: rgba(200,68,10,0.12);
+  --accent-border: rgba(200,68,10,0.25);
+  --text: #f0ede8;
+  --muted: #7a7068;
+  --rule: #252018;
+  --green: #2dd18a;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 860px) {
+  body { grid-template-columns: 1fr; }
+  .left-panel { display: none; }
+  .right-panel { padding: 40px 24px; }
+}
+
+/* ── LEFT PANEL ── */
+.left-panel {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 56px 56px 56px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.left-panel::before {
+  content: '';
+  position: absolute;
+  top: -100px; left: -100px;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,68,10,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.logo span { color: var(--accent); }
+
+.logo-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin-left: 6px;
+  animation: breathe 2s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+.left-main { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+.left-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.left-eyebrow::before {
+  content: '';
+  width: 24px; height: 1px;
+  background: var(--accent);
+  opacity: 0.5;
+}
+
+.left-headline {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(52px, 5vw, 72px);
+  line-height: 0.93;
+  letter-spacing: 0.01em;
+  margin-bottom: 28px;
+}
+
+.left-headline em {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  color: var(--accent);
+  font-size: 0.88em;
+}
+
+.left-copy {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--muted);
+  max-width: 360px;
+  margin-bottom: 40px;
+}
+
+.left-copy strong { color: var(--text); }
+
+/* STEPS */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  position: relative;
+  padding-bottom: 24px;
+}
+
+.step:last-child { padding-bottom: 0; }
+
+.step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 32px;
+  bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+
+.step-num {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.step.active .step-num {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.step.done .step-num {
+  border-color: var(--green);
+  background: rgba(45,209,138,0.1);
+  color: var(--green);
+}
+
+.step-text {
+  padding-top: 6px;
+}
+
+.step-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.step.pending .step-title { color: var(--muted); }
+
+.step-desc {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #444;
+  letter-spacing: 0.05em;
+}
+
+/* SOCIAL PROOF */
+.proof-strip {
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+
+.proof-row {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.proof-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.proof-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: var(--text);
+  line-height: 1;
+}
+
+.proof-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: #444;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.proof-divider {
+  width: 1px; height: 36px;
+  background: var(--border);
+}
+
+/* ── RIGHT PANEL ── */
+.right-panel {
+  padding: 56px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.form-header {
+  margin-bottom: 40px;
+}
+
+.form-step-indicator {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+
+.fsi-dot {
+  height: 3px;
+  border-radius: 100px;
+  background: var(--border);
+  transition: all 0.3s;
+}
+
+.fsi-dot.active {
+  background: var(--accent);
+  width: 32px;
+}
+
+.fsi-dot.done { background: var(--green); width: 16px; }
+.fsi-dot:not(.active):not(.done) { width: 16px; }
+
+.form-step-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.form-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.form-subtitle {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* FORM FIELDS */
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input,
+.field select {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: var(--accent);
+  background: var(--surface2);
+}
+
+.field input::placeholder { color: #3a3530; }
+
+.field .field-icon-wrap {
+  position: relative;
+}
+
+.field .field-icon-wrap input {
+  padding-left: 44px;
+}
+
+.field-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  pointer-events: none;
+}
+
+/* SELECT CUSTOM ARROW */
+.select-wrap {
+  position: relative;
+}
+
+.select-wrap::after {
+  content: '▾';
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.select-wrap select option {
+  background: #1c1916;
+  color: var(--text);
+}
+
+/* RADIO PILLS */
+.pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pill-option {
+  position: relative;
+}
+
+.pill-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0; height: 0;
+}
+
+.pill-option label {
+  display: block;
+  padding: 9px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.pill-option input:checked + label {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--text);
+}
+
+.pill-option label:hover {
+  border-color: #444;
+  color: var(--text);
+}
+
+/* URL FIELD SPECIAL */
+.url-field-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.url-prefix {
+  position: absolute;
+  left: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--muted);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.url-input {
+  padding-left: 72px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 14px !important;
+  letter-spacing: 0.02em;
+}
+
+/* SUBMIT */
+.submit-btn {
+  width: 100%;
+  padding: 16px 24px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn:hover {
+  background: #a33508;
+  transform: translateY(-1px);
+}
+
+.submit-btn:active { transform: translateY(0); }
+
+.submit-btn.loading {
+  background: #6a2204;
+  pointer-events: none;
+}
+
+.submit-sub {
+  text-align: center;
+  margin-top: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #3a3530;
+  letter-spacing: 0.08em;
+}
+
+/* BACK BUTTON */
+.back-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  margin-bottom: 32px;
+  transition: color 0.15s;
+}
+
+.back-btn:hover { color: var(--text); }
+
+/* FORM STEPS */
+.form-step { display: none; }
+.form-step.active { display: block; }
+
+/* BUILDING STATE */
+.building-state {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 400px;
+  gap: 24px;
+}
+
+.building-state.active {
+  display: flex;
+}
+
+.build-ring {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.build-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 0.05em;
+  color: var(--text);
+}
+
+.build-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+.build-log {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  min-height: 20px;
+}
+
+.timer-display {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 56px;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  line-height: 1;
+}
+
+.timer-display span { color: var(--accent); font-size: 32px; }
+
+/* DIVIDER */
+.or-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #333;
+  letter-spacing: 0.1em;
+}
+
+.or-divider::before,
+.or-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+</style>
+</head>
+<body>
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <div class="logo">LEAD<span>LOCK</span><div class="logo-dot"></div></div>
+
+  <div class="left-main">
+    <div class="left-eyebrow">AI Receptionist System</div>
+    <div class="left-headline">
+      Your AI agent,<br>
+      <em>live</em> in<br>
+      30 seconds.
+    </div>
+    <p class="left-copy">
+      Drop in your website URL. We scrape it, build your voice and chat agents, and send you a <strong>personalized demo link</strong> — all before you finish your coffee.
+    </p>
+
+    <div class="steps" id="stepTracker">
+      <div class="step active" id="track1">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <div class="step-title">Your info</div>
+          <div class="step-desc">Name, email, phone</div>
+        </div>
+      </div>
+      <div class="step pending" id="track2">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <div class="step-title">Your business</div>
+          <div class="step-desc">Type + biggest problem</div>
+        </div>
+      </div>
+      <div class="step pending" id="track3">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <div class="step-title">Your website</div>
+          <div class="step-desc">URL to build from</div>
+        </div>
+      </div>
+      <div class="step pending" id="track4">
+        <div class="step-num">✓</div>
+        <div class="step-text">
+          <div class="step-title">Agents go live</div>
+          <div class="step-desc">Demo link sent instantly</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="proof-strip">
+    <div class="proof-row">
+      <div class="proof-stat">
+        <div class="proof-val">30s</div>
+        <div class="proof-label">Avg build time</div>
+      </div>
+      <div class="proof-divider"></div>
+      <div class="proof-stat">
+        <div class="proof-val">24/7</div>
+        <div class="proof-label">Always answering</div>
+      </div>
+      <div class="proof-divider"></div>
+      <div class="proof-stat">
+        <div class="proof-val">0%</div>
+        <div class="proof-label">Missed leads</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+
+  <!-- STEP INDICATORS -->
+  <div class="form-step-indicator" id="stepDots">
+    <div class="fsi-dot active" id="dot1"></div>
+    <div class="fsi-dot" id="dot2"></div>
+    <div class="fsi-dot" id="dot3"></div>
+  </div>
+
+  <!-- ── STEP 1: Contact Info ── -->
+  <div class="form-step active" id="step1">
+    <div class="form-header">
+      <div class="form-step-label">Step 1 of 3</div>
+      <div class="form-title">WHO ARE WE BUILDING FOR?</div>
+      <p class="form-subtitle">We'll send your demo link here the moment it's ready.</p>
+    </div>
+
+    <div class="field-group">
+      <div class="field">
+        <label>First Name</label>
+        <input type="text" id="firstName" placeholder="Sarah" autocomplete="given-name">
+      </div>
+      <div class="field">
+        <label>Business Name</label>
+        <input type="text" id="bizName" placeholder="Apex Plumbing & HVAC" autocomplete="organization">
+      </div>
+      <div class="field">
+        <label>Email Address</label>
+        <input type="email" id="email" placeholder="sarah@yourbusiness.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label>Mobile Number</label>
+        <div class="field-icon-wrap">
+          <span class="field-icon">📱</span>
+          <input type="tel" id="phone" placeholder="+1 (555) 000-0000" autocomplete="tel">
+        </div>
+      </div>
+    </div>
+
+    <button class="submit-btn" onclick="goToStep(2)">
+      CONTINUE →
+    </button>
+    <div class="submit-sub">No card required &nbsp;·&nbsp; Free demo &nbsp;·&nbsp; Takes 60 seconds</div>
+  </div>
+
+  <!-- ── STEP 2: Business Context ── -->
+  <div class="form-step" id="step2">
+    <button class="back-btn" onclick="goToStep(1)">← BACK</button>
+
+    <div class="form-header">
+      <div class="form-step-label">Step 2 of 3</div>
+      <div class="form-title">TELL US ABOUT YOUR BUSINESS</div>
+      <p class="form-subtitle">Your agent will be trained to handle your specific industry and lead type.</p>
+    </div>
+
+    <div class="field-group">
+
+      <div class="field">
+        <label>Business Type</label>
+        <div class="select-wrap">
+          <select id="bizType">
+            <option value="" disabled selected>Select your industry</option>
+            <option value="hvac">HVAC / Plumbing</option>
+            <option value="roofing">Roofing / Contractors</option>
+            <option value="dental">Dental / Medical</option>
+            <option value="legal">Legal / Law Firm</option>
+            <option value="realestate">Real Estate</option>
+            <option value="fitness">Fitness / Wellness</option>
+            <option value="salon">Salon / Beauty</option>
+            <option value="restaurant">Restaurant / Food</option>
+            <option value="agency">Marketing Agency</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Biggest Lead Problem Right Now</label>
+        <div class="pill-group">
+          <div class="pill-option">
+            <input type="radio" name="problem" id="p1" value="missed-calls">
+            <label for="p1">Missing calls after hours</label>
+          </div>
+          <div class="pill-option">
+            <input type="radio" name="problem" id="p2" value="slow-followup">
+            <label for="p2">Slow follow-up on leads</label>
+          </div>
+          <div class="pill-option">
+            <input type="radio" name="problem" id="p3" value="no-booking">
+            <label for="p3">Leads don't book</label>
+          </div>
+          <div class="pill-option">
+            <input type="radio" name="problem" id="p4" value="cost">
+            <label for="p4">Reception costs too much</label>
+          </div>
+          <div class="pill-option">
+            <input type="radio" name="problem" id="p5" value="volume">
+            <label for="p5">Can't handle call volume</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Roughly how many calls do you miss per week?</label>
+        <div class="pill-group">
+          <div class="pill-option">
+            <input type="radio" name="missed" id="m1" value="1-5">
+            <label for="m1">1 – 5</label>
+          </div>
+          <div class="pill-option">
+            <input type="radio" name="missed" id="m2" value="5-15">
+            <label for="m2">5 – 15</label>
+          </div>
+          <div class="pill-option">
+            <input type="radio" name="missed" id="m3" value="15-30">
+            <label for="m3">15 – 30</label>
+          </div>
+          <div class="pill-option">
+            <input type="radio" name="missed" id="m4" value="30+">
+            <label for="m4">30+</label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="submit-btn" onclick="goToStep(3)">
+      CONTINUE →
+    </button>
+  </div>
+
+  <!-- ── STEP 3: Website URL ── -->
+  <div class="form-step" id="step3">
+    <button class="back-btn" onclick="goToStep(2)">← BACK</button>
+
+    <div class="form-header">
+      <div class="form-step-label">Step 3 of 3</div>
+      <div class="form-title">DROP IN YOUR WEBSITE</div>
+      <p class="form-subtitle">We'll scan it and build your agent from your real services, tone, and FAQs — nothing generic.</p>
+    </div>
+
+    <div class="field-group">
+      <div class="field">
+        <label>Your Website URL</label>
+        <div class="url-field-wrap">
+          <span class="url-prefix">https://</span>
+          <input type="text" class="url-input" id="websiteUrl" placeholder="yourbusiness.com">
+        </div>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="buildBtn" onclick="startBuild()">
+      BUILD MY AGENT →
+    </button>
+    <div class="submit-sub">Free &nbsp;·&nbsp; No card &nbsp;·&nbsp; Agents live in ~30 seconds</div>
+  </div>
+
+  <!-- ── BUILDING STATE ── -->
+  <div class="building-state" id="buildingState">
+    <div class="timer-display" id="timerDisplay">0<span>s</span></div>
+    <div class="build-ring"></div>
+    <div class="build-label">BUILDING YOUR AGENTS</div>
+    <div class="build-log" id="buildLog">Scanning your website...</div>
+    <div class="build-sub">SIT TIGHT — THIS TAKES ABOUT 30 SECONDS</div>
+  </div>
+
+</div>
+
+<script>
+  // ─────────────────────────────────────────────
+  // CONFIGURATION — swap these two URLs before launch
+  // ─────────────────────────────────────────────
+  const GHL_WEBHOOK_URL = 'https://services.leadconnectorhq.com/hooks/6Xo1JfUK8mtM2ERdkOnd/webhook-trigger/dfdb2da8-df29-477d-a49f-ffe45c1e976d';
+  const DEMO_PAGE_URL   = 'https://leadlock-entry-form.netlify.app/demo.html';
+  // ─────────────────────────────────────────────
+
+  let currentStep = 1;
+
+  // Collected form data across steps
+  const formData = {
+    firstName: '',
+    bizName: '',
+    email: '',
+    phone: '',
+    bizType: '',
+    problem: '',
+    missedCalls: '',
+    websiteUrl: ''
+  };
+
+  const stepLogs = [
+    "Scanning your website...",
+    "Extracting services + FAQs...",
+    "Training chat agent...",
+    "Configuring voice agent...",
+    "Personalizing demo page...",
+    "Finalizing your Lead Lock demo..."
+  ];
+
+  // ── VALIDATION ──
+  function validateStep1() {
+    const first = document.getElementById('firstName').value.trim();
+    const biz   = document.getElementById('bizName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+
+    if (!first)  return shake('firstName',  'Please enter your first name');
+    if (!biz)    return shake('bizName',    'Please enter your business name');
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+                 return shake('email',      'Please enter a valid email');
+    if (!phone)  return shake('phone',      'Please enter your mobile number');
+
+    formData.firstName = first;
+    formData.bizName   = biz;
+    formData.email     = email;
+    formData.phone     = phone;
+    return true;
+  }
+
+  function validateStep2() {
+    const bizType = document.getElementById('bizType').value;
+    const problem = document.querySelector('input[name="problem"]:checked');
+    const missed  = document.querySelector('input[name="missed"]:checked');
+
+    if (!bizType) return shake('bizType', 'Please select your industry');
+    if (!problem) return showError('Please select your biggest lead problem');
+    if (!missed)  return showError('Please select how many calls you miss per week');
+
+    formData.bizType    = bizType;
+    formData.problem    = problem.value;
+    formData.missedCalls = missed.value;
+    return true;
+  }
+
+  function validateStep3() {
+    let url = document.getElementById('websiteUrl').value.trim();
+    if (!url) return shake('websiteUrl', 'Please enter your website URL');
+
+    // Auto-add https:// if missing
+    if (!url.startsWith('http')) url = 'https://' + url;
+    formData.websiteUrl = url;
+    return true;
+  }
+
+  // ── FIELD SHAKE ANIMATION ──
+  function shake(fieldId, message) {
+    const el = document.getElementById(fieldId);
+    el.style.borderColor = '#ff4d4d';
+    el.style.animation = 'shake 0.4s ease';
+    el.placeholder = message;
+    setTimeout(() => {
+      el.style.animation = '';
+      el.style.borderColor = '';
+    }, 1500);
+    el.focus();
+    return false;
+  }
+
+  function showError(message) {
+    const existing = document.getElementById('formError');
+    if (existing) existing.remove();
+    const err = document.createElement('p');
+    err.id = 'formError';
+    err.style.cssText = 'color:#ff4d4d;font-family:JetBrains Mono,monospace;font-size:11px;margin-top:-8px;margin-bottom:12px;letter-spacing:0.05em;';
+    err.textContent = '⚠ ' + message;
+    document.querySelector(`#step${currentStep} .field-group`).prepend(err);
+    setTimeout(() => err.remove(), 3000);
+    return false;
+  }
+
+  // ── NAVIGATION ──
+  function updateTrackers(step) {
+    for (let i = 1; i <= 4; i++) {
+      const el = document.getElementById(`track${i}`);
+      el.className = 'step';
+      if (i < step) el.classList.add('done');
+      else if (i === step) el.classList.add('active');
+      else el.classList.add('pending');
+    }
+    for (let i = 1; i <= 3; i++) {
+      const dot = document.getElementById(`dot${i}`);
+      dot.className = 'fsi-dot';
+      if (i < step) dot.classList.add('done');
+      else if (i === step) dot.classList.add('active');
+    }
+  }
+
+  function goToStep(targetStep) {
+    // Validate before advancing
+    if (targetStep > currentStep) {
+      if (currentStep === 1 && !validateStep1()) return;
+      if (currentStep === 2 && !validateStep2()) return;
+    }
+    document.getElementById(`step${currentStep}`).classList.remove('active');
+    currentStep = targetStep;
+    document.getElementById(`step${targetStep}`).classList.add('active');
+    updateTrackers(targetStep);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── BUILD + WEBHOOK ──
+  async function startBuild() {
+    if (!validateStep3()) return;
+
+    // Show building state
+    document.getElementById('step3').classList.remove('active');
+    document.getElementById('buildingState').classList.add('active');
+    document.getElementById('stepDots').style.opacity = '0';
+    updateTrackers(4);
+
+    // Fire GHL webhook and run timer in parallel
+    const [_] = await Promise.all([
+      sendToGHL(),
+      runBuildTimer()
+    ]);
+  }
+
+  async function sendToGHL() {
+    try {
+      await fetch(GHL_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName:    formData.firstName,
+          businessName: formData.bizName,
+          email:        formData.email,
+          phone:        formData.phone,
+          businessType: formData.bizType,
+          leadProblem:  formData.problem,
+          missedCalls:  formData.missedCalls,
+          websiteUrl:   formData.websiteUrl,
+          source:       'leadlock-entry-form',
+          submittedAt:  new Date().toISOString()
+        })
+      });
+    } catch (err) {
+      // Fail silently — timer still runs, demo link still sends via GHL
+      console.warn('Webhook error:', err);
+    }
+  }
+
+  function runBuildTimer() {
+    return new Promise((resolve) => {
+      let seconds = 0;
+      let logIndex = 0;
+
+      const timer = setInterval(() => {
+        seconds++;
+        document.getElementById('timerDisplay').innerHTML = `${seconds}<span>s</span>`;
+
+        if (seconds % 5 === 0 && logIndex < stepLogs.length - 1) {
+          logIndex++;
+          const log = document.getElementById('buildLog');
+          log.style.opacity = '0';
+          setTimeout(() => {
+            log.textContent = stepLogs[logIndex];
+            log.style.opacity = '1';
+            log.style.transition = 'opacity 0.4s';
+          }, 200);
+        }
+
+        if (seconds >= 30) {
+          clearInterval(timer);
+          completeBuild();
+          resolve();
+        }
+      }, 1000);
+    });
+  }
+
+  function completeBuild() {
+    document.getElementById('buildLog').textContent = "✓ Your agents are live!";
+    document.getElementById('buildLog').style.color = '#2dd18a';
+
+    setTimeout(() => {
+      // Redirect to demo page — personalized via URL params
+      const params = new URLSearchParams({
+        name:  formData.firstName,
+        biz:   formData.bizName,
+        color: '#c8440a'
+      });
+      window.location.href = `${DEMO_PAGE_URL}?${params.toString()}`;
+    }, 1200);
+  }
+</script>
+
+<style>
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%      { transform: translateX(-8px); }
+    40%      { transform: translateX(8px); }
+    60%      { transform: translateX(-5px); }
+    80%      { transform: translateX(5px); }
+  }
+</style>
+
+</body>
+</html>
